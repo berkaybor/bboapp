@@ -91,15 +91,15 @@
     </script>
     <script>
       function addData(index){
-        db.collection("votes").add({
+        db.collection("votes").doc(firebase.auth().currentUser.uid).set({
           vote: index,
-      })
-      .then(function(docRef) {
-          console.log("Document written with ID: ", docRef.id);
-      })
-      .catch(function(error) {
-          console.error("Error adding document: ", error);
-      });
+        })
+        .then(function() {
+          console.log("Document successfully written!");
+        })
+        .catch(function(error) {
+          console.error("Error writing document: ", error);
+        });
       }
     </script>
     <script>
@@ -115,11 +115,28 @@
         window.location.href = "/index.html";
       }
     </script>
+
+    <script>
+    function oy(kategori,degisken){ db.collection("oylar").doc(firebase.auth().currentUser.uid).set({[kategori]:degisken},{merge:true});}
+    </script>
+
   </head>
   <body>
     <button type="button" onclick="showUserID()">Show UserID</button>
     <h2 id="userid"></h2>
-    
+    <p id="test"></p>
+    <button type="button" onclick="addData(2)">Vote</button>
+
+    <br><br><br>
+    kategori1
+      <button id="1" onclick="oy('kat1',1);"> Emin </button>
+      <button id="berkay" onclick="oy('kat1',2);">Berkay</button>
+  
+    <br><br><br>
+  kategori 2
+      <button id="emin" onclick="oy('kat2',1);"> aaa </button>
+      <button id="berkay" onclick="oy('kat2',2);">bbbb</button>
+    <br><br><br>
     <button type="button" onclick="logout()">Log Out</button>
   </body>
 
