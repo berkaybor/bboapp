@@ -1,126 +1,148 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Boğaziçi Bilişim Ödülleri</title>
-    
-    
-    <!-- firebaseui -->
-    <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
-    <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
-    
-    <!-- bootstrap -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
-    
-    <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
-    
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/5.8.2/firebase-app.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/5.8.2/firebase-auth.js"></script>
-    <script defer src="/__/firebase/5.8.2/firebase-database.js"></script>
-    <script defer src="/__/firebase/5.8.2/firebase-messaging.js"></script>
-    <script defer src="/__/firebase/5.8.2/firebase-storage.js"></script>
-    <!-- initialize the SDK after all desired features are loaded -->
-    <script defer src="/__/firebase/init.js"></script>
-    
-    <script src="app.js"></script>
 
-    <script>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Boğaziçi Bilişim Ödülleri</title>
 
 
-      // Adds data to cloud firestore using index
-      function addData(index){
-        db.collection("votes").doc(firebase.auth().currentUser.uid).set({
-          vote: index,
-        })
-        .then(function() {
-          console.log("Document successfully written!");
-        })
-        .catch(function(error) {
-          console.error("Error writing document: ", error);
-        });
-      }
+  <!-- firebaseui -->
+  <script src="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.js"></script>
+  <link type="text/css" rel="stylesheet" href="https://cdn.firebase.com/libs/firebaseui/3.5.2/firebaseui.css" />
+
+  <!-- bootstrap -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"></script>
+
+  <script src="https://www.gstatic.com/firebasejs/5.8.2/firebase.js"></script>
+
+  <!-- update the version number as needed -->
+  <script defer src="/__/firebase/5.8.2/firebase-app.js"></script>
+  <!-- include only the Firebase features as you need -->
+  <script defer src="/__/firebase/5.8.2/firebase-auth.js"></script>
+  <script defer src="/__/firebase/5.8.2/firebase-database.js"></script>
+  <script defer src="/__/firebase/5.8.2/firebase-messaging.js"></script>
+  <script defer src="/__/firebase/5.8.2/firebase-storage.js"></script>
+  <!-- initialize the SDK after all desired features are loaded -->
+  <script defer src="/__/firebase/init.js"></script>
+
+  <script src="app.js"></script>
+
+  <script>
+    
+    async function sleep2000(){
+      await sleep(2000);
+    }
+    sleep2000();
+    if(firebase.auth().currentUser === null){
+      alert("selam")
+    }
+
+    // var aa = firebase.auth().currentUser
+    // try {
+    //   firebase.auth().currentUser.uid
+    // }
+    // catch (err) {
+    //   console.log(err.message);
+    //   alert("Lütfen oy vermek için ilk önce giriş yapınız");
+    //   // document.location.href = "index.html";
+    // }
+
+    // Adds data to cloud firestore using index
+    function addData(index){
+      db.collection("votes").doc(firebase.auth().currentUser.uid).set({
+        vote: index,
+      })
+      .then(function() {
+        console.log("Document successfully written!");
+      })
+      .catch(function(error) {
+        console.error("Error writing document: ", error);
+      });
+    }
       
-      // Changes contents of the tag with id of userid to users id
-      function showUserID() {
-        document.getElementById("userid").innerHTML = firebase.auth().currentUser.uid;
+    // Changes contents of the tag with id of userid to users id
+    function showUserID() {
+      document.getElementById("userid").innerHTML = firebase.auth().currentUser.uid;
+    }
+    function logout() {
+      firebase.auth().signOut().then(function() {
+        // Sign-out successful.
+      }).catch(function(error) {
+        // An error happened.
+      });
+      window.location.href = "index.html";
+    }
+  </script>
+
+  <script>
+    var cat1selcected = 0;
+
+    function vote(category, indexOfVote) {
+      db.collection("votes").doc(firebase.auth().currentUser.uid).set(
+        {[category]:indexOfVote},{merge:true}
+      );
+    }
+
+    db.collection("secenekler").doc("foto").get().then(function (doc) {
+      console.log(doc);
+      document.getElementById("eminFoto").src = doc.data()["e"];
+    });
+
+    function blueBorder(option){
+      document.getElementById(option).style.border="2px solid blue";
+      if(veribil!="eminFoto"){
+        document.getElementsByClassName("kat")[0].style.border ="none";
       }
-      function logout() {
-        firebase.auth().signOut().then(function() {
-          // Sign-out successful.
-        }).catch(function(error) {
-          // An error happened.
-        });
-        window.location.href = "index.html";
-      }
-    </script>
+    }
 
-    <script>
-      function vote(category, indexOfVote) {
-        db.collection("votes").doc(firebase.auth().currentUser.uid).set(
-          {[category]:indexOfVote},{merge:true}
-        );
-      }
+    function voteEvent(category, option){
 
+      db.collection("votes").doc(firebase.auth().currentUser.uid).set(
+        { [category]: indexOfVote }, { merge: true }
+      );
+    }
+  </script>
 
+</head>
 
+<body>±
+  <div class="row">
+    <div class="col-md-12">
+      <button type="button" id="userid" class="btn btn-primary" onclick="showUserID()">Show UserID</button>
+    </div>
+  </div>
 
-
-
-
-
-
-      db.collection("secenekler").doc("foto")
-          .get().then(function (doc) {
-
-            console.log(doc);
-document.getElementById("foto").src= doc.data()["e"];
-});
-
-
-function gizle(veribil){
-  document.getElementById(veribil).style.border="2px solid blue";
+  <br><br><br>
+  <p>Birinci Kategori</p>
   
-  if(veribil!="foto"){
-  document.getElementsByClassName("kat")[0].style.border ="none";
-}
-
-}
-
-
-    </script>
-
-  </head>
-  <body>
-    <div class="row">
-      <div class="col-md-12">
-        <button type="button" id="userid" class="btn btn-primary" onclick="showUserID()">Show UserID</button>
+  <div class="container">
+    <div class="card" style="width: 18rem;" id="eminCard">
+      <img class="card-img-top" src="" alt="Card image cap" id="eminFoto">
+      <div class="card-body">
+        <button id="1" style="width:100%;" class="btn btn-primary" onclick="voteEvent('cat1', 1)";>Emin</a>
       </div>
     </div>
-    <p id="test"></p>
-    <button type="button" onclick="addData(2)">Vote</button>
+    
+    <div class="card" style="width: 18rem;" id="berkayCard">
+      <img class="card-img-top" src="" alt="Card image cap" id="berkayFoto">
+      <div class="card-body">
+        <button id="1" style="width:100%;" class="btn btn-primary" onclick="vote('category1',2);blueBorder('berkayCard');">Emin</a>
+      </div>
+    </div>
+  </div>
 
-    <br><br><br>
-    <p>Birinci Kategori</p>
-
-    <div class="card">
-<img class="kat" src="" id="foto">
-    <button id="1" class="btn btn-primary" onclick="vote('category1',1);gizle('foto');"> Emin </button>
-
-</div>
-<br><br><br><br>
-    <button id="berkay" onclick="vote('category1',2);gizle('berkay');">Berkay</button>
-    <br><br><br>
-    <p>İkinci Kategori</p>
-    <button id="emin" onclick="vote('category2',1);"> aaa </button>
-    <button id="berkay" onclick="vote('category2',2);">bbbb</button>
-    <br><br><br>
-    <button type="button" onclick="logout()">Log Out</button>
-  </body>
+  <br><br><br><br>
+  <button id="berkay" onclick="vote('category1',2);blueBorder('berkay');">Berkay</button>
+  <br><br><br>
+  <p>İkinci Kategori</p>
+  <button id="emin" onclick="vote('category2',1);"> aaa </button>
+  <button id="berkay" onclick="vote('category2',2);">bbbb</button>
+  <br><br><br>
+  <button type="button" onclick="logout()">Log Out</button>
+</body>
 
 </html>
